@@ -226,4 +226,6 @@ if __name__ == '__main__':
     print(f"Models loaded: {model is not None}")
     print(f"Available emotions: {labels}")
     print("="*50 + "\n")
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    # For production, use PORT from environment variable (Render provides this)
+    port = int(os.environ.get('PORT', 5001))
+    app.run(host='0.0.0.0', port=port, debug=False)
