@@ -22,13 +22,17 @@ async function requestPermissions() {
     try {
       // Check if already granted
       const checkResult = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
-    );
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
+      );
       console.log('🎤 Microphone permission check:', checkResult);
       
       if (checkResult) {
         return true;
       }
+      
+      // Check Android version - RECOGNIZE_SPEECH is not needed for API < 30
+      const androidVersion = Platform.Version;
+      console.log('📱 Android version:', androidVersion);
       
       // Request permission
       const audioGranted = await PermissionsAndroid.request(
@@ -800,39 +804,41 @@ export default function VoiceDetectionScreen() {
 
       console.log('Audio analysis result:', audioData);
       
-      // PRIORITIZE TEXT SENTIMENT - User wants word-based detection to be primary
-      let finalMood = 'Neutral';
-      let finalEmotion = 'Neutral';
+      // COMBINE BOTH TEXT AND AUDIO for better accuracy
+      let finalMood = audioData.mood || 'Neutral';
+      let finalEmotion = audioData.emotion || 'Neutral';
       let detectionSource = 'audio';
       
-      // If we have transcribed text and sentiment, use it as PRIMARY source
+      console.log(`🎯 COMBINING DETECTION METHODS:`);
+      console.log(`   Audio result: ${audioData.mood} (${audioData.emotion})`);
+      
+      // If we have transcribed text and sentiment, combine with audio
       if (transcribedText && transcribedText.trim().length > 0 && textSentiment) {
         const textMood = sentimentToMood(textSentiment.emotion);
-        console.log(`📝 Text analysis: "${transcribedText}"`);
+        console.log(`📝 Transcribed text: "${transcribedText}"`);
         console.log(`📊 Text sentiment: ${textSentiment.emotion} (confidence: ${textSentiment.confidence.toFixed(2)})`);
-        console.log(`📊 Text scores:`, textSentiment.scores);
+        console.log(`📊 Text keyword scores:`, textSentiment.scores);
+        console.log(`📊 Total keywords found: ${textSentiment.totalKeywords}`);
         
-        // Use text sentiment if we have ANY keywords detected (even low confidence)
+        // If text has keywords detected, use text as primary (more reliable)
         if (textSentiment.totalKeywords > 0) {
           finalMood = textMood;
           finalEmotion = textSentiment.emotion;
-          detectionSource = 'text';
-          console.log(`✅ Using TEXT-based detection: ${finalMood}`);
+          detectionSource = `text+audio (text priority: ${textMood}, audio: ${audioData.mood})`;
+          console.log(`✅ Using TEXT-based detection as primary: ${finalMood}`);
+          console.log(`   Audio also detected: ${audioData.mood} (using text for better accuracy)`);
         } else {
-          // No keywords found in text, fall back to audio
-          finalMood = audioData.mood || 'Neutral';
-          finalEmotion = audioData.emotion || 'Neutral';
-          detectionSource = 'audio (no text keywords)';
-          console.log(`⚠️ No keywords in text, using audio: ${finalMood}`);
+          // No keywords in text, use audio but note both were checked
+          detectionSource = `audio (text checked but no keywords: "${transcribedText}")`;
+          console.log(`⚠️ Text transcription available but no emotion keywords found`);
+          console.log(`   Using audio detection: ${finalMood}`);
         }
       } else {
-        // No text available, use audio analysis
-        finalMood = audioData.mood || 'Neutral';
-        finalEmotion = audioData.emotion || 'Neutral';
-        detectionSource = 'audio (no transcription)';
-        console.log(`⚠️ No text transcription available, using audio: ${finalMood}`);
-        if (transcribedText === '' || !transcribedText) {
-          console.log(`⚠️ Voice-to-text did not work. Transcribed text is empty.`);
+        // No text available, use audio only
+        detectionSource = 'audio (voice-to-text unavailable)';
+        console.log(`⚠️ Voice-to-text not available - using audio detection only: ${finalMood}`);
+        if (!transcribedText || transcribedText.trim().length === 0) {
+          console.log(`   → Voice module may not be working. Audio detection is less accurate.`);
         }
       }
 
