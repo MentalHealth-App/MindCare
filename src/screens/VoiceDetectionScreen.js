@@ -1202,13 +1202,32 @@ export default function VoiceDetectionScreen() {
               <Text style={styles.interpretationTitle}>🧠 What This Means</Text>
               <Text style={styles.interpretationText}>
                 {mood === 'Happy' && '✨ Your voice shows positive energy and enthusiasm. Keep up the great mood!'}
-                {mood === 'Sad' && '💙 Your voice reflects some heaviness. It\'s okay to feel this way. Consider talking to someone you trust.'}
+                {mood === 'Sad' && '💙 Your voice reflects some heaviness. It\'s okay to feel this way. Remember: feelings are temporary, and you don\'t have to face them alone.'}
                 {mood === 'Angry' && '🔥 Your voice shows intensity. Take a few deep breaths and find a healthy outlet.'}
                 {mood === 'Anxious' && '🌊 Your voice suggests some tension. Try some breathing exercises or meditation.'}
                 {mood === 'Neutral' && '⚖️ Your voice is calm and balanced. A good baseline emotional state.'}
                 {mood === 'Surprised' && '⭐ Your voice shows excitement or unexpectedness. Something caught your attention!'}
                 {mood === 'Uncomfortable' && '🤗 Your voice reflects some discomfort. Take time for self-care.'}
               </Text>
+              
+              {/* Action Button for Sad Mood */}
+              {mood === 'Sad' && (
+                <View style={styles.actionButtonContainer}>
+                  <CustomButton
+                    title="💙 Get Support & Activities"
+                    onPress={() => navigation.navigate('Activities', {
+                      depressionScore: 15, // Moderate sadness level
+                      anxietyScore: 10,
+                      stressScore: 12,
+                      mood: 'Sad'
+                    })}
+                    style={styles.supportButton}
+                  />
+                  <Text style={styles.supportSubtext}>
+                    Access personalized meditations, music, affirmations, and helpful tips
+                  </Text>
+                </View>
+              )}
             </View>
           </View>
         )}
@@ -1547,6 +1566,31 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#689f38',
     lineHeight: 22,
+    marginBottom: 10,
+  },
+  actionButtonContainer: {
+    marginTop: 15,
+    paddingTop: 15,
+    borderTopWidth: 1,
+    borderTopColor: '#c5e1a5',
+  },
+  supportButton: {
+    backgroundColor: '#5e9fd1',
+    borderRadius: 25,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    elevation: 3,
+    shadowColor: '#5e9fd1',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  supportSubtext: {
+    fontSize: 12,
+    color: '#558b2f',
+    textAlign: 'center',
+    marginTop: 8,
+    fontStyle: 'italic',
   },
   instructionsContainer: {
     backgroundColor: '#fff3e0',
