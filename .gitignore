@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+api/node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Uploads and temporary files
+api/uploads/
+*.mp4
+*.wav
+*.m4a
+*.mp3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build files
+android/app/build/
+ios/build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+.env.local
+
+# Model files (if large, consider Git LFS)
+# api/models/*.pkl
