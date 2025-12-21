@@ -149,9 +149,55 @@ def analyze_audio():
         
         print(f"✓ Pitch: {pitch:.1f} Hz, Speed: {speed:.1f} BPM")
         
-        # Extract features and predict emotion
+        # PITCH-BASED EMOTION DETECTION (More reliable fallback)
+        # Use pitch and speed to determine emotion when ML model is unreliable
+        pitch_based_emotion = "Neutral"
+        pitch_confidence = 0.5
+        
+        if pitch < 100:
+            # Low pitch: Sad, Depressed
+            pitch_based_emotion = "Sad"
+            pitch_confidence = 0.7 if pitch < 80 else 0.6
+        elif pitch > 200:
+            # Very high pitch: Happy, Excited, or Anxious
+            if speed > 120:
+                pitch_based_emotion = "Happy"  # Fast + high = happy
+                pitch_confidence = 0.7
+            else:
+                pitch_based_emotion = "Fear"  # High but slow = anxious
+                pitch_confidence = 0.6
+        elif pitch > 160:
+            # High pitch: Happy or Angry
+            if speed > 110:
+                pitch_based_emotion = "Happy"
+                pitch_confidence = 0.65
+            else:
+                pitch_based_emotion = "Angry"  # High pitch, slower = angry
+                pitch_confidence = 0.6
+        elif pitch > 120:
+            # Medium-high pitch: Happy or Neutral
+            if speed > 100:
+                pitch_based_emotion = "Happy"
+                pitch_confidence = 0.6
+            else:
+                pitch_based_emotion = "Neutral"
+                pitch_confidence = 0.5
+        else:
+            # Low-medium pitch: Sad or Neutral
+            if speed < 80:
+                pitch_based_emotion = "Sad"  # Low pitch + slow = sad
+                pitch_confidence = 0.65
+            else:
+                pitch_based_emotion = "Neutral"
+                pitch_confidence = 0.5
+        
+        print(f"✓ Pitch-based emotion: {pitch_based_emotion} (confidence: {pitch_confidence:.2f})")
+        
+        # Extract features and predict emotion using ML model
+        ml_emotion = None
+        ml_confidence = 0.0
         if model is not None and scaler is not None:
-            print("Extracting features for emotion prediction...")
+            print("Extracting features for ML emotion prediction...")
             feature_vector = extract_features_for_model(temp_wav)
             
             if feature_vector is not None:
@@ -169,16 +215,34 @@ def analyze_audio():
                 pred = model.predict(feature_vector_scaled)[0]
                 pred_proba = model.predict_proba(feature_vector_scaled)[0] if hasattr(model, 'predict_proba') else None
                 
-                emotion = labels[int(pred)] if int(pred) < len(labels) else "Neutral"
-                print(f"✓ Predicted emotion: {emotion} (class {int(pred)})")
+                ml_emotion = labels[int(pred)] if int(pred) < len(labels) else "Neutral"
+                ml_confidence = float(pred_proba[int(pred)]) if pred_proba is not None else 0.5
+                print(f"✓ ML predicted emotion: {ml_emotion} (class {int(pred)}, confidence: {ml_confidence:.2f})")
                 if pred_proba is not None:
                     print(f"✓ Prediction probabilities: {dict(zip(labels, pred_proba))}")
             else:
-                emotion = "Neutral"
-                print("⚠ Could not extract features, defaulting to Neutral")
+                print("⚠ Could not extract features for ML model")
         else:
-            emotion = "Neutral"
-            print("⚠ Model not loaded, defaulting to Neutral")
+            print("⚠ ML model not loaded")
+        
+        # COMBINE ML AND PITCH-BASED DETECTION
+        # Prefer ML if confidence is high, otherwise use pitch-based
+        if ml_emotion and ml_confidence > 0.6:
+            emotion = ml_emotion
+            print(f"✅ Using ML prediction: {emotion} (confidence: {ml_confidence:.2f})")
+        elif ml_emotion and ml_confidence > 0.4:
+            # Medium ML confidence - check if it matches pitch
+            if ml_emotion == pitch_based_emotion:
+                emotion = ml_emotion
+                print(f"✅ ML and pitch agree: {emotion}")
+            else:
+                # Disagreement - prefer pitch-based (more reliable for voice)
+                emotion = pitch_based_emotion
+                print(f"⚠️ ML ({ml_emotion}) and pitch ({pitch_based_emotion}) disagree - using pitch-based")
+        else:
+            # Low ML confidence or no ML - use pitch-based
+            emotion = pitch_based_emotion
+            print(f"✅ Using pitch-based prediction: {emotion} (ML confidence too low or unavailable)")
         
         # Map emotion to mood
         mood_map = {
