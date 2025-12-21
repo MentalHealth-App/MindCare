@@ -22,8 +22,8 @@ async function requestPermissions() {
     try {
       // Check if already granted
       const checkResult = await PermissionsAndroid.check(
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
-      );
+      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
+    );
       console.log('🎤 Microphone permission check:', checkResult);
       
       if (checkResult) {
@@ -125,7 +125,7 @@ export default function VoiceDetectionScreen() {
       // Backend will analyze after recording stops
       if (recordTime < 3) {
         return 'Listening... 🎤';
-      } else {
+    } else {
         return 'Analyzing... 🎵'; // Will analyze via backend after recording
       }
     }
@@ -693,7 +693,7 @@ export default function VoiceDetectionScreen() {
             );
             
             console.log('🎭 Detected emotion:', emotion, 'Volume:', normalizedVolume.toFixed(1), 'Text:', transcribedText || 'none'); // DEBUG
-            setRealtimeEmotion(emotion);
+          setRealtimeEmotion(emotion);
         } catch (error) {
           console.error('Error in record listener:', error);
         }
@@ -735,7 +735,7 @@ export default function VoiceDetectionScreen() {
       audioRecorderPlayer.removeRecordBackListener();
       setRecording(false);
       setAudioPath(result);
-      
+
       // Clear history
       volumeHistory.current = [];
       pitchHistory.current = [];
@@ -800,28 +800,40 @@ export default function VoiceDetectionScreen() {
 
       console.log('Audio analysis result:', audioData);
       
-      // Use text sentiment if available and confident, otherwise use audio analysis
-      let finalMood = audioData.mood || 'Neutral';
-      let finalEmotion = audioData.emotion || 'Neutral';
+      // PRIORITIZE TEXT SENTIMENT - User wants word-based detection to be primary
+      let finalMood = 'Neutral';
+      let finalEmotion = 'Neutral';
+      let detectionSource = 'audio';
       
-      if (textSentiment && textSentiment.confidence > 0.4 && transcribedText.trim().length > 0) {
-        // Text sentiment is confident, use it or combine
+      // If we have transcribed text and sentiment, use it as PRIMARY source
+      if (transcribedText && transcribedText.trim().length > 0 && textSentiment) {
         const textMood = sentimentToMood(textSentiment.emotion);
-        console.log(`Using text sentiment: ${textMood} (confidence: ${textSentiment.confidence.toFixed(2)})`);
+        console.log(`📝 Text analysis: "${transcribedText}"`);
+        console.log(`📊 Text sentiment: ${textSentiment.emotion} (confidence: ${textSentiment.confidence.toFixed(2)})`);
+        console.log(`📊 Text scores:`, textSentiment.scores);
         
-        // Combine: if text confidence is high, prioritize it
-        if (textSentiment.confidence > 0.6) {
+        // Use text sentiment if we have ANY keywords detected (even low confidence)
+        if (textSentiment.totalKeywords > 0) {
           finalMood = textMood;
           finalEmotion = textSentiment.emotion;
+          detectionSource = 'text';
+          console.log(`✅ Using TEXT-based detection: ${finalMood}`);
         } else {
-          // Lower confidence: combine both
-          // If they agree, use text; if they disagree, prefer text if confidence > 0.5
-          if (textMood !== audioData.mood && textSentiment.confidence > 0.5) {
-            finalMood = textMood;
-            finalEmotion = textSentiment.emotion;
-          }
+          // No keywords found in text, fall back to audio
+          finalMood = audioData.mood || 'Neutral';
+          finalEmotion = audioData.emotion || 'Neutral';
+          detectionSource = 'audio (no text keywords)';
+          console.log(`⚠️ No keywords in text, using audio: ${finalMood}`);
         }
-        console.log(`Final mood (combined): ${finalMood}`);
+      } else {
+        // No text available, use audio analysis
+        finalMood = audioData.mood || 'Neutral';
+        finalEmotion = audioData.emotion || 'Neutral';
+        detectionSource = 'audio (no transcription)';
+        console.log(`⚠️ No text transcription available, using audio: ${finalMood}`);
+        if (transcribedText === '' || !transcribedText) {
+          console.log(`⚠️ Voice-to-text did not work. Transcribed text is empty.`);
+        }
       }
 
       setPitch(audioData.pitch);
@@ -830,9 +842,18 @@ export default function VoiceDetectionScreen() {
       setMood(finalMood);
 
       // Log detection sources
-      console.log(`Final detection - Audio: ${audioData.mood}, Text: ${textSentiment?.emotion || 'N/A'}, Final: ${finalMood}`);
+      console.log(`🎯 FINAL DETECTION:`);
+      console.log(`   Source: ${detectionSource}`);
+      console.log(`   Audio result: ${audioData.mood} (${audioData.emotion})`);
+      console.log(`   Text result: ${textSentiment?.emotion || 'N/A'} (confidence: ${textSentiment?.confidence?.toFixed(2) || 'N/A'})`);
+      console.log(`   Transcribed text: "${transcribedText || '(none)'}"`);
+      console.log(`   FINAL MOOD: ${finalMood}`);
+      console.log(`   FINAL EMOTION: ${finalEmotion}`);
 
-      Alert.alert('Analysis Complete', `Mood detected: ${finalMood}\n${transcribedText ? `Text: "${transcribedText}"` : ''}`);
+      Alert.alert(
+        'Analysis Complete', 
+        `Mood: ${finalMood}\n\n${transcribedText ? `You said: "${transcribedText}"` : 'Voice-to-text unavailable'}\n\nDetection: ${detectionSource}`
+      );
     } catch (error) {
       console.error('Audio analysis error:', error);
       const errorMsg = error.response?.data?.error || error.message || 'Unknown error';
@@ -1225,7 +1246,7 @@ export default function VoiceDetectionScreen() {
                   />
                   <Text style={styles.supportSubtext}>
                     Access personalized meditations, music, affirmations, and helpful tips
-                  </Text>
+              </Text>
                 </View>
               )}
             </View>

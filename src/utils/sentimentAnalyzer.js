@@ -10,18 +10,25 @@ const emotionKeywords = {
   ],
   sad: [
     'sad', 'depressed', 'down', 'upset', 'unhappy', 'miserable', 'hopeless', 'lonely',
-    'disappointed', 'hurt', 'broken', 'cry', 'tears', 'pain', 'suffering', 'grief',
-    'sorrow', 'melancholy', 'gloomy', 'blue', 'devastated', 'heartbroken', 'discouraged'
+    'disappointed', 'hurt', 'broken', 'cry', 'crying', 'tears', 'pain', 'suffering', 'grief',
+    'sorrow', 'melancholy', 'gloomy', 'blue', 'devastated', 'heartbroken', 'discouraged',
+    'tired', 'exhausted', 'weary', 'drained', 'empty', 'numb', 'sadness', 'unhappiness',
+    'low', 'feeling low', 'feeling down', 'not good', 'bad', 'terrible', 'awful', 'horrible',
+    'worst', 'difficult', 'hard', 'struggling', 'can\'t', 'cannot', 'don\'t want', 'do not want',
+    'give up', 'quit', 'end', 'done', 'over', 'finished'
   ],
   angry: [
-    'angry', 'mad', 'furious', 'annoyed', 'irritated', 'frustrated', 'rage', 'hate',
-    'disgusted', 'outraged', 'livid', 'enraged', 'hostile', 'resentful', 'bitter',
-    'aggressive', 'violent', 'fuming', 'seething', 'wrath', 'ire'
+    'angry', 'mad', 'furious', 'annoyed', 'irritated', 'irritating', 'frustrated', 'frustrating',
+    'rage', 'raging', 'hate', 'hatred', 'disgusted', 'outraged', 'livid', 'enraged', 'hostile',
+    'resentful', 'bitter', 'aggressive', 'violent', 'fuming', 'seething', 'wrath', 'ire',
+    'upset', 'pissed', 'annoying', 'stupid', 'idiot', 'damn', 'hell', 'screw', 'screwed'
   ],
   anxious: [
-    'anxious', 'worried', 'nervous', 'afraid', 'scared', 'fear', 'panic', 'stressed',
-    'tense', 'uneasy', 'apprehensive', 'restless', 'frightened', 'terrified', 'dread',
-    'concerned', 'jittery', 'on edge', 'overwhelmed', 'panic', 'uneasy'
+    'anxious', 'anxiety', 'worried', 'worry', 'nervous', 'nervousness', 'afraid', 'scared',
+    'scary', 'fear', 'fearful', 'panic', 'panicking', 'stressed', 'stress', 'stressing',
+    'tense', 'tension', 'uneasy', 'apprehensive', 'restless', 'frightened', 'terrified',
+    'terrifying', 'dread', 'dreading', 'concerned', 'jittery', 'on edge', 'overwhelmed',
+    'overwhelming', 'can\'t sleep', 'cannot sleep', 'racing thoughts', 'worrying'
   ],
   calm: [
     'calm', 'peaceful', 'relaxed', 'serene', 'tranquil', 'quiet', 'still', 'composed',
@@ -49,11 +56,14 @@ export const analyzeTextSentiment = (text) => {
     neutral: 0,
   };
 
-  // Count keyword matches
+  // Count keyword matches (improved matching)
   Object.keys(emotionKeywords).forEach((emotion) => {
     emotionKeywords[emotion].forEach((keyword) => {
-      if (lowerText.includes(keyword)) {
-        scores[emotion] += 1;
+      // Use word boundary matching for better accuracy
+      const regex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+      const matches = lowerText.match(regex);
+      if (matches) {
+        scores[emotion] += matches.length; // Count multiple occurrences
       }
     });
   });
