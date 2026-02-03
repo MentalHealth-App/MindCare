@@ -10,9 +10,28 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`\n🌐 ${req.method} ${req.path} - ${new Date().toLocaleTimeString()}`);
+  next();
+});
+
 const uri = process.env.MONGODB_URI;
 const OPENROUTER_KEY = process.env.OPENROUTER_KEY;
 const JWT_SECRET = process.env.JWT_SECRET || 'your_app_secret';
+
+// Log OpenRouter key status (without exposing the key)
+if (OPENROUTER_KEY) {
+  const keyPrefix = OPENROUTER_KEY.substring(0, 8);
+  const keySuffix = OPENROUTER_KEY.substring(OPENROUTER_KEY.length - 4);
+  console.log('✓ OpenRouter API key loaded (length:', OPENROUTER_KEY.length, ')');
+  console.log('  Key format:', keyPrefix + '...' + keySuffix);
+  if (!OPENROUTER_KEY.startsWith('sk-or-v1-')) {
+    console.error('⚠️ WARNING: API key should start with "sk-or-v1-"');
+  }
+} else {
+  console.error('⚠️ OPENROUTER_KEY is missing from .env file!');
+}
 
 async function main() {
   try {
@@ -52,16 +71,20 @@ const VoiceAnalysis = mongoose.model('VoiceAnalysis', voiceAnalysisSchema);
 
 // Middleware to protect routes - verifies JWT token
 function requireAuth(req, res, next) {
+  console.log('🔐 Auth check for:', req.path);
   const authHeader = req.headers.authorization || '';
   const token = authHeader.replace('Bearer ', '');
   if (!token) {
+    console.log('❌ No token provided');
     return res.status(401).json({ error: 'Unauthorized: Token missing' });
   }
   try {
     const payload = jwt.verify(token, JWT_SECRET);
     req.user = payload; // contains email or other info embedded in token
+    console.log('✅ Auth successful for:', payload.email);
     return next();
   } catch (error) {
+    console.log('❌ Token invalid:', error.message);
     return res.status(401).json({ error: 'Unauthorized: Token invalid' });
   }
 }
@@ -253,6 +276,96 @@ No explanation, comments, or markdown.
   }
 });
 
+// Lightweight stress-buddy chat (OpenRouter -> GPT)
+app.post('/stress-chat', requireAuth, async (req, res) => {
+  console.log('📥 Received stress-chat request');
+  console.log('📥 Request body:', JSON.stringify(req.body, null, 2));
+  try {
+    const incomingMessages = Array.isArray(req.body.messages) ? req.body.messages.slice(-8) : [];
+
+    const systemPrompt = `
+You are "Stress Buddy", a brief, warm, and practical stress-relief companion.
+- Keep replies under 120 words.
+- Offer 1-2 actionable tips (breathing, grounding, gentle reassurance).
+- Avoid medical diagnosis or emergency advice; instead say: "If this feels urgent, please reach out to a professional or local helpline."
+- Be concise, friendly, and non-judgmental.
+    `.trim();
+
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      ...incomingMessages.map((m) => ({
+        role: m.role === 'assistant' ? 'assistant' : 'user',
+        content: String(m.content || '').slice(0, 800),
+      })),
+    ];
+
+    // Log request details for debugging (without exposing key)
+    console.log('📤 Sending to OpenRouter:', {
+      model: 'openai/gpt-4o-mini',
+      messagesCount: messages.length,
+      hasKey: !!OPENROUTER_KEY,
+      keyLength: OPENROUTER_KEY?.length || 0,
+    });
+
+    const routerResp = await axios.post(
+      'https://openrouter.ai/api/v1/chat/completions',
+      {
+        model: 'openai/gpt-4o-mini',
+        messages,
+        max_tokens: 240,
+        temperature: 0.7,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${OPENROUTER_KEY}`,
+          // Use a real referer per OpenRouter policy (local or production)
+          'HTTP-Referer': process.env.OPENROUTER_REFERER || 'http://localhost:8000',
+          'X-Title': 'MindCareApp',
+          'Content-Type': 'application/json',
+        },
+        timeout: 60000,
+      }
+    );
+
+    const reply = routerResp.data?.choices?.[0]?.message?.content?.trim() || 'I am here for you.';
+    console.log('✓ Stress chat success, reply length:', reply.length);
+    res.json({ reply });
+  } catch (err) {
+    const status = err.response?.status;
+    const errorData = err.response?.data;
+    const errorMsg = err.message;
+    
+    console.error('✗ Stress chat error - Status:', status);
+    console.error('✗ Error message:', errorMsg);
+    if (errorData) {
+      console.error('✗ Error response:', JSON.stringify(errorData, null, 2));
+    }
+    if (err.response?.status === 401) {
+      console.error('⚠️ Authentication failed - check OPENROUTER_KEY');
+    } else if (err.response?.status === 404) {
+      console.error('⚠️ Model not found - check model name');
+    } else if (err.response?.status === 429) {
+      console.error('⚠️ Rate limit exceeded');
+    }
+    if (!OPENROUTER_KEY) {
+      console.error('⚠️ OPENROUTER_KEY is missing!');
+    }
+    // Heuristic fallback with a bit of variation
+    const lastUser = (Array.isArray(req.body.messages) ? req.body.messages.slice(-1)[0]?.content || '' : '').toLowerCase();
+    let fallback = "I'm here with you. Let's try a slow breath together: inhale for 4, hold for 4, exhale for 6.";
+    if (lastUser.includes('sad') || lastUser.includes('down') || lastUser.includes('tired')) {
+      fallback = "I'm sorry it's heavy right now. Let's take 3 slow breaths together. Inhale 4, hold 4, exhale 6. After that, try a tiny action you can control—like sipping water or stretching your shoulders.";
+    } else if (lastUser.includes('anx') || lastUser.includes('worry') || lastUser.includes('stress')) {
+      fallback = "I hear your stress. Try 5-4-3-2-1 grounding: name 5 things you see, 4 you can touch, 3 you hear, 2 you smell, 1 you taste. Slow breaths in between.";
+    } else if (lastUser.includes('angry') || lastUser.includes('mad') || lastUser.includes('frustrated')) {
+      fallback = "It’s okay to feel angry. Try box breathing: inhale 4, hold 4, exhale 4, hold 4. Then, write a quick note of what you can and can’t control right now.";
+    } else if (lastUser.includes('happy') || lastUser.includes('good')) {
+      fallback = "Glad to hear that. Maybe anchor this good moment: take a slow breath and note one thing you appreciate right now, however small.";
+    }
+    res.status(200).json({ reply: fallback });
+  }
+});
+
 // Add this route to handle voice analysis results
 app.post('/voice-analysis', requireAuth, async (req, res) => {
   try {
@@ -308,5 +421,15 @@ app.get('/voice-analysis/:email', requireAuth, async (req, res) => {
   }
 });
 
+// Test endpoint (no auth required)
+app.get('/test', (req, res) => {
+  console.log('✅ Test endpoint hit!');
+  res.json({ message: 'Server is working!', timestamp: new Date().toISOString() });
+});
+
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, '0.0.0.0', () => console.log(`API running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`API running on port ${PORT}`);
+  console.log(`Test endpoint: http://localhost:${PORT}/test`);
+  console.log(`Stress chat endpoint: http://localhost:${PORT}/stress-chat`);
+});

@@ -7,7 +7,7 @@ export default function HomeScreen({ navigation }) {
     <View style={{ flex: 1, justifyContent: 'center', padding: 24 }}>
       <CustomButton title="Take Test" onPress={() => navigation.navigate('MentalHealthTest')} />
       <CustomButton title="History/Reports" onPress={() => navigation.navigate('History')} />
-      <CustomButton title="Chatbot" onPress={() => {navigation.navigate('VoiceDetection')}} />
+      <CustomButton title="Chatbot" onPress={() => navigation.navigate('StressChat')} />
       <CustomButton title="Activities" onPress={() => navigation.navigate('Activities')} />
     </View>
   );

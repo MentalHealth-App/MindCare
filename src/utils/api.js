@@ -12,7 +12,7 @@ const LOCAL_NODE_URL = Platform.OS === 'android' ? 'http://10.0.2.2:8000' : `htt
 const LOCAL_PYTHON_URL = Platform.OS === 'android' ? 'http://10.0.2.2:5001' : `http://${LOCAL_IP}:5001`;
 
 // Use production URLs (set to false for local development)
-const USE_PRODUCTION = true;
+const USE_PRODUCTION = false;
 
 export const BASE_URL = USE_PRODUCTION ? PRODUCTION_NODE_URL : LOCAL_NODE_URL;
 export const AUDIO_ANALYZER_URL = USE_PRODUCTION ? PRODUCTION_PYTHON_URL : LOCAL_PYTHON_URL;
@@ -87,6 +87,16 @@ export const getRecommendations = async (depression, anxiety, stress, mood) => {
   const token = await AsyncStorage.getItem('userToken');
   return axios.post(`${BASE_URL}/recommendations`, 
     { depression, anxiety, stress, mood },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+};
+
+// Stress-buddy chat (LLM via backend proxy)
+export const sendStressChat = async (messages) => {
+  const token = await AsyncStorage.getItem('userToken');
+  return axios.post(
+    `${BASE_URL}/stress-chat`,
+    { messages },
     { headers: { Authorization: `Bearer ${token}` } }
   );
 };

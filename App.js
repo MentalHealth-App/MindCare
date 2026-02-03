@@ -11,6 +11,7 @@ import VoiceDetectionScreen from "./src/screens/VoiceDetectionScreen";
 import ResultAnalysisScreen from "./src/screens/ResultAnalysisScreen";
 import ActivitiesScreen from "./src/screens/ActivitiesScreen";
 import HistoryScreen from "./src/screens/HistoryScreen";
+import StressChatScreen from "./src/screens/StressChatScreen";
 import { COLORS } from "./src/components/theme";
 
 const Stack = createStackNavigator();
@@ -43,6 +44,7 @@ export default function App() {
         <Stack.Screen name="ResultAnalysis" component={ResultAnalysisScreen} />
         <Stack.Screen name="Activities" component={ActivitiesScreen} />
         <Stack.Screen name="History" component={HistoryScreen} />
+        <Stack.Screen name="StressChat" component={StressChatScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
