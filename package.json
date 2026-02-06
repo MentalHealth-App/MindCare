@@ -1,7 +1,7 @@
 {
   "name": "MindCareApp",
   "version": "0.0.1",
-  "main": "api/index.js",
+  "main": "index.js",
   "private": true,
   "scripts": {
     "android": "react-native run-android",

@@ -34,6 +34,8 @@ Thumbs.db
 
 # Build files
 android/app/build/
+android/.gradle/
+android/app/.cxx/
 ios/build/
 
 # Logs
