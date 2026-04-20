@@ -1,7 +1,87 @@
 require('dotenv').config();
-require('./mongo-dns');
+const dns = require('dns');
 const express = require('express');
 const mongoose = require('mongoose');
+
+// --- MongoDB Atlas mongodb+srv DNS (1.1.1.1 vs 8.8.8.8) — try Cloudflare → Google → both ---
+const _cfDns = ['1.1.1.1', '1.0.0.1'];
+const _googleDns = ['8.8.8.8', '8.8.4.4'];
+
+function _applyMongoDns(servers) {
+  dns.setServers(servers);
+  if (typeof dns.setDefaultResultOrder === 'function') {
+    dns.setDefaultResultOrder('ipv4first');
+  }
+}
+
+function _isSrvDnsFailure(err) {
+  if (!err) return false;
+  if (err.code === 'ECONNREFUSED' && err.syscall === 'querySrv') return true;
+  const msg = String(err.message || '');
+  return msg.includes('querySrv') || msg.includes('_mongodb._tcp');
+}
+
+async function connectMongooseWithDnsFallback(mongooseInstance, uri, options = {}) {
+  const raw = (process.env.MONGODB_DNS_SERVERS || '').trim();
+  const mode = raw.toLowerCase();
+
+  if (mode === 'system' || mode === 'off') {
+    await mongooseInstance.connect(uri, options);
+    console.log('MongoDB connected');
+    return;
+  }
+
+  if (raw) {
+    const custom = raw.split(',').map((s) => s.trim()).filter(Boolean);
+    if (custom.length) {
+      _applyMongoDns(custom);
+      await mongooseInstance.connect(uri, options);
+      console.log('MongoDB connected (custom DNS:', custom.join(', '), ')');
+      return;
+    }
+  }
+
+  const strategies = [
+    { label: 'Cloudflare 1.1.1.1', servers: _cfDns },
+    { label: 'Google 8.8.8.8', servers: _googleDns },
+    { label: 'Cloudflare + Google', servers: [..._cfDns, ..._googleDns] },
+  ];
+
+  let lastErr;
+  for (const { label, servers } of strategies) {
+    try {
+      _applyMongoDns(servers);
+      console.log('MongoDB DNS: trying', label, '→', servers.join(', '));
+      await mongooseInstance.connect(uri, options);
+      console.log('MongoDB connected ✓ (' + label + ')');
+      return;
+    } catch (err) {
+      lastErr = err;
+      if (_isSrvDnsFailure(err)) {
+        console.warn('MongoDB DNS: retry — failed (' + label + '):', err.message || err);
+        try {
+          if (mongooseInstance.connection.readyState !== 0) {
+            await mongooseInstance.disconnect();
+          }
+        } catch (_) {
+          /* ignore */
+        }
+        continue;
+      }
+      throw err;
+    }
+  }
+
+  console.error('MongoDB connection error:', lastErr?.message || lastErr);
+  if (lastErr && _isSrvDnsFailure(lastErr)) {
+    console.error(
+      'All DNS strategies failed for mongodb+srv. Set MONGODB_URI_STANDARD to Atlas “standard” mongodb:// string, or fix system DNS.'
+    );
+  }
+  throw lastErr;
+}
+// --- end MongoDB DNS ---
+
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const axios = require('axios');
@@ -17,7 +97,9 @@ app.use((req, res, next) => {
   next();
 });
 
-const uri = process.env.MONGODB_URI;
+// MONGODB_URI_STANDARD (mongodb://...) skips DNS SRV lookups — use when querySrv / _mongodb._tcp fails
+// (common on some Windows networks, VPNs, or strict DNS). Atlas: Connect → choose "standard" string if offered.
+const uri = process.env.MONGODB_URI_STANDARD || process.env.MONGODB_URI;
 const OPENROUTER_KEY = process.env.OPENROUTER_KEY;
 const JWT_SECRET = process.env.JWT_SECRET || 'your_app_secret';
 
@@ -35,11 +117,17 @@ if (OPENROUTER_KEY) {
 }
 
 async function main() {
+  if (!uri) {
+    console.error('MongoDB: set MONGODB_URI or MONGODB_URI_STANDARD in .env');
+    return;
+  }
   try {
-    await mongoose.connect(uri);
-    console.log('MongoDB connected');
+    await connectMongooseWithDnsFallback(mongoose, uri, {
+      serverSelectionTimeoutMS: 15000,
+      family: 4,
+    });
   } catch (err) {
-    console.error('MongoDB connection error:', err);
+    console.error('MongoDB connection error:', err.message || err);
   }
 }
 main();

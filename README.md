@@ -79,8 +79,19 @@ Leave this terminal open. You should see the server listening on port 8000.
 
 ### 4. Python audio analysis API
 
-Runs on port **5001**. Install dependencies and start the Flask app:
+Runs on port **5001**. Use a virtual environment (required on macOS/Homebrew Python):
 
+**macOS (recommended):**
+```bash
+cd api
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python audio_analyzer.py
+```
+Or run: `./run_audio_api.sh`
+
+**Windows:**
 ```cmd
 cd api
 pip install -r requirements.txt
