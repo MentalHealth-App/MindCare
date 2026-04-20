@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   KeyboardAvoidingView,
   Platform,
@@ -13,11 +14,12 @@ import {
 } from 'react-native';
 import { sendStressChat } from '../utils/api';
 import { COLORS } from '../components/theme';
+import { clearAuthData } from '../utils/auth';
 
 const initialBotMessage =
   "Hi, I'm your Stress Buddy. Tell me how you're feeling, and I'll share a short, calm tip to help you regroup.";
 
-export default function StressChatScreen() {
+export default function StressChatScreen({ navigation }) {
   const [messages, setMessages] = useState([
     { id: 'bot-0', role: 'assistant', content: initialBotMessage },
   ]);
@@ -56,7 +58,14 @@ export default function StressChatScreen() {
       ]);
       setTimeout(scrollToEnd, 100);
     } catch (err) {
-      console.error('Stress chat error:', err);
+      const status = err?.response?.status || err?.status;
+      if (status === 401) {
+        await clearAuthData();
+        Alert.alert('Session Expired', 'Please log in again.');
+        navigation.replace('Login');
+        return;
+      }
+      console.warn('Stress chat error:', err?.message || err);
       setMessages((prev) => [
         ...prev,
         {
