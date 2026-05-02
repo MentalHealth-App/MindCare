@@ -1,5 +1,6 @@
 // api/index.js
 require('dotenv').config();
+require('../mongo-dns');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');

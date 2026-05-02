@@ -1,0 +1,1 @@
+/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/android/app/build/intermediates/cxx/Debug/5o4p3o6j/obj/arm64-v8a

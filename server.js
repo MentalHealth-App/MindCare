@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('./mongo-dns');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
