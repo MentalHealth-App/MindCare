@@ -1,26 +1,26 @@
 {
-  "root": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main",
-  "reactNativePath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native",
+  "root": "C:\\project\\MindCare",
+  "reactNativePath": "C:\\project\\MindCare\\node_modules\\react-native",
   "reactNativeVersion": "0.82",
   "dependencies": {
     "@react-native-async-storage/async-storage": {
-      "root": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/@react-native-async-storage/async-storage",
+      "root": "C:\\project\\MindCare\\node_modules\\@react-native-async-storage\\async-storage",
       "name": "@react-native-async-storage/async-storage",
       "platforms": {
         "ios": {
-          "podspecPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/@react-native-async-storage/async-storage/RNCAsyncStorage.podspec",
+          "podspecPath": "C:\\project\\MindCare\\node_modules\\@react-native-async-storage\\async-storage\\RNCAsyncStorage.podspec",
           "version": "2.2.0",
           "configurations": [],
           "scriptPhases": []
         },
         "android": {
-          "sourceDir": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/@react-native-async-storage/async-storage/android",
+          "sourceDir": "C:\\project\\MindCare\\node_modules\\@react-native-async-storage\\async-storage\\android",
           "packageImportPath": "import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;",
           "packageInstance": "new AsyncStoragePackage()",
           "buildTypes": [],
           "libraryName": "rnasyncstorage",
           "componentDescriptors": [],
-          "cmakeListsPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/@react-native-async-storage/async-storage/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cmakeListsPath": "C:/project/MindCare/node_modules/@react-native-async-storage/async-storage/android/build/generated/source/codegen/jni/CMakeLists.txt",
           "cxxModuleCMakeListsModuleName": null,
           "cxxModuleCMakeListsPath": null,
           "cxxModuleHeaderName": null,
@@ -29,22 +29,22 @@
       }
     },
     "@react-native-voice/voice": {
-      "root": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/@react-native-voice/voice",
+      "root": "C:\\project\\MindCare\\node_modules\\@react-native-voice\\voice",
       "name": "@react-native-voice/voice",
       "platforms": {
         "ios": {
-          "podspecPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/@react-native-voice/voice/react-native-voice.podspec",
+          "podspecPath": "C:\\project\\MindCare\\node_modules\\@react-native-voice\\voice\\react-native-voice.podspec",
           "version": "3.2.4",
           "configurations": [],
           "scriptPhases": []
         },
         "android": {
-          "sourceDir": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/@react-native-voice/voice/android",
+          "sourceDir": "C:\\project\\MindCare\\node_modules\\@react-native-voice\\voice\\android",
           "packageImportPath": "import com.wenkesj.voice.VoicePackage;",
           "packageInstance": "new VoicePackage()",
           "buildTypes": [],
           "componentDescriptors": [],
-          "cmakeListsPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/@react-native-voice/voice/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cmakeListsPath": "C:/project/MindCare/node_modules/@react-native-voice/voice/android/build/generated/source/codegen/jni/CMakeLists.txt",
           "cxxModuleCMakeListsModuleName": null,
           "cxxModuleCMakeListsPath": null,
           "cxxModuleHeaderName": null,
@@ -53,17 +53,17 @@
       }
     },
     "react-native-gesture-handler": {
-      "root": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-gesture-handler",
+      "root": "C:\\project\\MindCare\\node_modules\\react-native-gesture-handler",
       "name": "react-native-gesture-handler",
       "platforms": {
         "ios": {
-          "podspecPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-gesture-handler/RNGestureHandler.podspec",
-          "version": "2.29.0",
+          "podspecPath": "C:\\project\\MindCare\\node_modules\\react-native-gesture-handler\\RNGestureHandler.podspec",
+          "version": "2.31.1",
           "configurations": [],
           "scriptPhases": []
         },
         "android": {
-          "sourceDir": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-gesture-handler/android",
+          "sourceDir": "C:\\project\\MindCare\\node_modules\\react-native-gesture-handler\\android",
           "packageImportPath": "import com.swmansion.gesturehandler.RNGestureHandlerPackage;",
           "packageInstance": "new RNGestureHandlerPackage()",
           "buildTypes": [],
@@ -72,7 +72,7 @@
             "RNGestureHandlerButtonComponentDescriptor",
             "RNGestureHandlerRootViewComponentDescriptor"
           ],
-          "cmakeListsPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-gesture-handler/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cmakeListsPath": "C:/project/MindCare/node_modules/react-native-gesture-handler/android/build/generated/source/codegen/jni/CMakeLists.txt",
           "cxxModuleCMakeListsModuleName": null,
           "cxxModuleCMakeListsPath": null,
           "cxxModuleHeaderName": null,
@@ -81,23 +81,23 @@
       }
     },
     "react-native-nitro-modules": {
-      "root": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-nitro-modules",
+      "root": "C:\\project\\MindCare\\node_modules\\react-native-nitro-modules",
       "name": "react-native-nitro-modules",
       "platforms": {
         "ios": {
-          "podspecPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-nitro-modules/NitroModules.podspec",
+          "podspecPath": "C:\\project\\MindCare\\node_modules\\react-native-nitro-modules\\NitroModules.podspec",
           "version": "0.30.2",
           "configurations": [],
           "scriptPhases": []
         },
         "android": {
-          "sourceDir": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-nitro-modules/android",
+          "sourceDir": "C:\\project\\MindCare\\node_modules\\react-native-nitro-modules\\android",
           "packageImportPath": "import com.margelo.nitro.NitroModulesPackage;",
           "packageInstance": "new NitroModulesPackage()",
           "buildTypes": [],
           "libraryName": "NitroModulesSpec",
           "componentDescriptors": [],
-          "cmakeListsPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-nitro-modules/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cmakeListsPath": "C:/project/MindCare/node_modules/react-native-nitro-modules/android/build/generated/source/codegen/jni/CMakeLists.txt",
           "cxxModuleCMakeListsModuleName": null,
           "cxxModuleCMakeListsPath": null,
           "cxxModuleHeaderName": null,
@@ -106,22 +106,22 @@
       }
     },
     "react-native-nitro-sound": {
-      "root": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-nitro-sound",
+      "root": "C:\\project\\MindCare\\node_modules\\react-native-nitro-sound",
       "name": "react-native-nitro-sound",
       "platforms": {
         "ios": {
-          "podspecPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-nitro-sound/NitroSound.podspec",
+          "podspecPath": "C:\\project\\MindCare\\node_modules\\react-native-nitro-sound\\NitroSound.podspec",
           "version": "0.2.9",
           "configurations": [],
           "scriptPhases": []
         },
         "android": {
-          "sourceDir": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-nitro-sound/android",
+          "sourceDir": "C:\\project\\MindCare\\node_modules\\react-native-nitro-sound\\android",
           "packageImportPath": "import com.margelo.nitro.sound.SoundPackage;",
           "packageInstance": "new SoundPackage()",
           "buildTypes": [],
           "componentDescriptors": [],
-          "cmakeListsPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-nitro-sound/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cmakeListsPath": "C:/project/MindCare/node_modules/react-native-nitro-sound/android/build/generated/source/codegen/jni/CMakeLists.txt",
           "cxxModuleCMakeListsModuleName": null,
           "cxxModuleCMakeListsPath": null,
           "cxxModuleHeaderName": null,
@@ -130,22 +130,47 @@
       }
     },
     "react-native-pitchy": {
-      "root": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-pitchy",
+      "root": "C:\\project\\MindCare\\node_modules\\react-native-pitchy",
       "name": "react-native-pitchy",
       "platforms": {
         "ios": {
-          "podspecPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-pitchy/react-native-pitchy.podspec",
+          "podspecPath": "C:\\project\\MindCare\\node_modules\\react-native-pitchy\\react-native-pitchy.podspec",
           "version": "1.0.0",
           "configurations": [],
           "scriptPhases": []
         },
         "android": {
-          "sourceDir": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-pitchy/android",
+          "sourceDir": "C:\\project\\MindCare\\node_modules\\react-native-pitchy\\android",
           "packageImportPath": "import com.pitchy.PitchyPackage;",
           "packageInstance": "new PitchyPackage()",
           "buildTypes": [],
           "componentDescriptors": [],
-          "cmakeListsPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-pitchy/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cmakeListsPath": "C:/project/MindCare/node_modules/react-native-pitchy/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cxxModuleCMakeListsModuleName": null,
+          "cxxModuleCMakeListsPath": null,
+          "cxxModuleHeaderName": null,
+          "isPureCxxDependency": false
+        }
+      }
+    },
+    "react-native-reanimated": {
+      "root": "C:\\project\\MindCare\\node_modules\\react-native-reanimated",
+      "name": "react-native-reanimated",
+      "platforms": {
+        "ios": {
+          "podspecPath": "C:\\project\\MindCare\\node_modules\\react-native-reanimated\\RNReanimated.podspec",
+          "version": "4.3.0",
+          "configurations": [],
+          "scriptPhases": []
+        },
+        "android": {
+          "sourceDir": "C:\\project\\MindCare\\node_modules\\react-native-reanimated\\android",
+          "packageImportPath": "import com.swmansion.reanimated.ReanimatedPackage;",
+          "packageInstance": "new ReanimatedPackage()",
+          "buildTypes": [],
+          "libraryName": "rnreanimated",
+          "componentDescriptors": [],
+          "cmakeListsPath": "C:/project/MindCare/node_modules/react-native-reanimated/android/build/generated/source/codegen/jni/CMakeLists.txt",
           "cxxModuleCMakeListsModuleName": null,
           "cxxModuleCMakeListsPath": null,
           "cxxModuleHeaderName": null,
@@ -154,17 +179,17 @@
       }
     },
     "react-native-safe-area-context": {
-      "root": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-safe-area-context",
+      "root": "C:\\project\\MindCare\\node_modules\\react-native-safe-area-context",
       "name": "react-native-safe-area-context",
       "platforms": {
         "ios": {
-          "podspecPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-safe-area-context/react-native-safe-area-context.podspec",
-          "version": "5.6.1",
+          "podspecPath": "C:\\project\\MindCare\\node_modules\\react-native-safe-area-context\\react-native-safe-area-context.podspec",
+          "version": "5.7.0",
           "configurations": [],
           "scriptPhases": []
         },
         "android": {
-          "sourceDir": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-safe-area-context/android",
+          "sourceDir": "C:\\project\\MindCare\\node_modules\\react-native-safe-area-context\\android",
           "packageImportPath": "import com.th3rdwave.safeareacontext.SafeAreaContextPackage;",
           "packageInstance": "new SafeAreaContextPackage()",
           "buildTypes": [],
@@ -173,7 +198,7 @@
             "RNCSafeAreaProviderComponentDescriptor",
             "RNCSafeAreaViewComponentDescriptor"
           ],
-          "cmakeListsPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt",
+          "cmakeListsPath": "C:/project/MindCare/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt",
           "cxxModuleCMakeListsModuleName": null,
           "cxxModuleCMakeListsPath": null,
           "cxxModuleHeaderName": null,
@@ -182,17 +207,17 @@
       }
     },
     "react-native-screens": {
-      "root": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-screens",
+      "root": "C:\\project\\MindCare\\node_modules\\react-native-screens",
       "name": "react-native-screens",
       "platforms": {
         "ios": {
-          "podspecPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-screens/RNScreens.podspec",
-          "version": "4.18.0",
+          "podspecPath": "C:\\project\\MindCare\\node_modules\\react-native-screens\\RNScreens.podspec",
+          "version": "4.24.0",
           "configurations": [],
           "scriptPhases": []
         },
         "android": {
-          "sourceDir": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-screens/android",
+          "sourceDir": "C:\\project\\MindCare\\node_modules\\react-native-screens\\android",
           "packageImportPath": "import com.swmansion.rnscreens.RNScreensPackage;",
           "packageInstance": "new RNScreensPackage()",
           "buildTypes": [],
@@ -209,10 +234,10 @@
             "RNSScreenFooterComponentDescriptor",
             "RNSScreenContentWrapperComponentDescriptor",
             "RNSModalScreenComponentDescriptor",
-            "RNSBottomTabsComponentDescriptor",
+            "RNSTabsHostComponentDescriptor",
             "RNSSafeAreaViewComponentDescriptor"
           ],
-          "cmakeListsPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-screens/android/src/main/jni/CMakeLists.txt",
+          "cmakeListsPath": "C:/project/MindCare/node_modules/react-native-screens/android/src/main/jni/CMakeLists.txt",
           "cxxModuleCMakeListsModuleName": null,
           "cxxModuleCMakeListsPath": null,
           "cxxModuleHeaderName": null,
@@ -221,17 +246,17 @@
       }
     },
     "react-native-svg": {
-      "root": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-svg",
+      "root": "C:\\project\\MindCare\\node_modules\\react-native-svg",
       "name": "react-native-svg",
       "platforms": {
         "ios": {
-          "podspecPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-svg/RNSVG.podspec",
+          "podspecPath": "C:\\project\\MindCare\\node_modules\\react-native-svg\\RNSVG.podspec",
           "version": "15.14.0",
           "configurations": [],
           "scriptPhases": []
         },
         "android": {
-          "sourceDir": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-svg/android",
+          "sourceDir": "C:\\project\\MindCare\\node_modules\\react-native-svg\\android",
           "packageImportPath": "import com.horcrux.svg.SvgPackage;",
           "packageInstance": "new SvgPackage()",
           "buildTypes": [],
@@ -267,7 +292,7 @@
             "RNSVGTSpanComponentDescriptor",
             "RNSVGUseComponentDescriptor"
           ],
-          "cmakeListsPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-svg/android/src/main/jni/CMakeLists.txt",
+          "cmakeListsPath": "C:/project/MindCare/node_modules/react-native-svg/android/src/main/jni/CMakeLists.txt",
           "cxxModuleCMakeListsModuleName": null,
           "cxxModuleCMakeListsPath": null,
           "cxxModuleHeaderName": null,
@@ -276,17 +301,17 @@
       }
     },
     "react-native-webview": {
-      "root": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-webview",
+      "root": "C:\\project\\MindCare\\node_modules\\react-native-webview",
       "name": "react-native-webview",
       "platforms": {
         "ios": {
-          "podspecPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-webview/react-native-webview.podspec",
+          "podspecPath": "C:\\project\\MindCare\\node_modules\\react-native-webview\\react-native-webview.podspec",
           "version": "13.16.0",
           "configurations": [],
           "scriptPhases": []
         },
         "android": {
-          "sourceDir": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-webview/android",
+          "sourceDir": "C:\\project\\MindCare\\node_modules\\react-native-webview\\android",
           "packageImportPath": "import com.reactnativecommunity.webview.RNCWebViewPackage;",
           "packageInstance": "new RNCWebViewPackage()",
           "buildTypes": [],
@@ -294,7 +319,32 @@
           "componentDescriptors": [
             "RNCWebViewComponentDescriptor"
           ],
-          "cmakeListsPath": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/node_modules/react-native-webview/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cmakeListsPath": "C:/project/MindCare/node_modules/react-native-webview/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cxxModuleCMakeListsModuleName": null,
+          "cxxModuleCMakeListsPath": null,
+          "cxxModuleHeaderName": null,
+          "isPureCxxDependency": false
+        }
+      }
+    },
+    "react-native-worklets": {
+      "root": "C:\\project\\MindCare\\node_modules\\react-native-worklets",
+      "name": "react-native-worklets",
+      "platforms": {
+        "ios": {
+          "podspecPath": "C:\\project\\MindCare\\node_modules\\react-native-worklets\\RNWorklets.podspec",
+          "version": "0.8.1",
+          "configurations": [],
+          "scriptPhases": []
+        },
+        "android": {
+          "sourceDir": "C:\\project\\MindCare\\node_modules\\react-native-worklets\\android",
+          "packageImportPath": "import com.swmansion.worklets.WorkletsPackage;",
+          "packageInstance": "new WorkletsPackage()",
+          "buildTypes": [],
+          "libraryName": "rnworklets",
+          "componentDescriptors": [],
+          "cmakeListsPath": "C:/project/MindCare/node_modules/react-native-worklets/android/build/generated/source/codegen/jni/CMakeLists.txt",
           "cxxModuleCMakeListsModuleName": null,
           "cxxModuleCMakeListsPath": null,
           "cxxModuleHeaderName": null,
@@ -465,7 +515,7 @@
         {
           "name": "--path <path>",
           "description": "Path to the React Native project root.",
-          "default": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main"
+          "default": "C:\\project\\MindCare"
         },
         {
           "name": "--platform <string>",
@@ -522,7 +572,7 @@
         {
           "name": "--terminal <string>",
           "description": "Launches the Metro Bundler in a new window using the specified terminal path.",
-          "default": "vscode"
+          "default": "cmd.exe"
         },
         {
           "name": "--binary-path <string>",
@@ -690,7 +740,7 @@
         {
           "name": "--terminal <string>",
           "description": "Launches the Metro Bundler in a new window using the specified terminal path.",
-          "default": "vscode"
+          "default": "cmd.exe"
         },
         {
           "name": "--appId <string>",
@@ -765,7 +815,7 @@
   "assets": [],
   "project": {
     "ios": {
-      "sourceDir": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/ios",
+      "sourceDir": "C:\\project\\MindCare\\ios",
       "xcodeProject": {
         "name": "MindCareApp.xcodeproj",
         "path": ".",
@@ -774,7 +824,7 @@
       "assets": []
     },
     "android": {
-      "sourceDir": "/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/android",
+      "sourceDir": "C:\\project\\MindCare\\android",
       "appName": "app",
       "packageName": "com.mindcareapp",
       "applicationId": "com.mindcareapp",

@@ -1,0 +1,12 @@
+{
+  "enabled": true,
+  "prefabPath": "C:\\Users\\User\\.gradle\\caches\\modules-2\\files-2.1\\com.google.prefab\\cli\\2.1.0\\aa32fec809c44fa531f01dcfb739b5b3304d3050\\cli-2.1.0-all.jar",
+  "packages": [
+    "C:\\project\\MindCare\\node_modules\\react-native-nitro-modules\\android\\build\\intermediates\\prefab_package\\debug\\prefab",
+    "C:\\project\\MindCare\\node_modules\\react-native-worklets\\android\\build\\intermediates\\prefab_package\\debug\\prefab",
+    "C:\\Users\\User\\.gradle\\caches\\9.0.0\\transforms\\07375d9df3a1f95317fc20e344347c42\\transformed\\jetified-react-android-0.82.0-debug\\prefab",
+    "C:\\project\\MindCare\\node_modules\\react-native-reanimated\\android\\build\\intermediates\\prefab_package\\debug\\prefab",
+    "C:\\Users\\User\\.gradle\\caches\\9.0.0\\transforms\\af43ed892430a2df115cea983df4a61d\\transformed\\jetified-hermes-android-0.82.0-debug\\prefab",
+    "C:\\Users\\User\\.gradle\\caches\\9.0.0\\transforms\\97c16419c1089f82511cc6150d259292\\transformed\\jetified-fbjni-0.7.0\\prefab"
+  ]
+}
