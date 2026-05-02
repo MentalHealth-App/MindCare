@@ -1,1 +1,0 @@
-/Users/muthuanushya/Documents/FlutterApp/MindCareApp-main/android/app/build/intermediates/cxx/Debug/j35v5v3p/obj/x86_64

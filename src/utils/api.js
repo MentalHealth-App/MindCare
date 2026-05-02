@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { clearAuthData } from './auth';
 
 // Production URLs (Deployed on Render)
 const PRODUCTION_NODE_URL = 'https://mindcare-w3vj.onrender.com';
@@ -94,6 +95,12 @@ export const getRecommendations = async (depression, anxiety, stress, mood) => {
 // Stress-buddy chat (LLM via backend proxy)
 export const sendStressChat = async (messages) => {
   const token = await AsyncStorage.getItem('userToken');
+  if (!token || token.split('.').length !== 3) {
+    await clearAuthData();
+    const err = new Error('Session expired. Please log in again.');
+    err.status = 401;
+    throw err;
+  }
   return axios.post(
     `${BASE_URL}/stress-chat`,
     { messages },

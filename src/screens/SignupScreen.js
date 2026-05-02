@@ -39,7 +39,8 @@ export default function SignupScreen({ navigation }) {
     setLoading(true);
     try {
       const res = await signUp(email, password);
-      await AsyncStorage.setItem('userEmail', email);
+      const token = await AsyncStorage.setItem('userEmail', email);
+      console.log(token);
       Alert.alert('Success', res.data.message);
       navigation.replace('Login');
     } catch (err) {

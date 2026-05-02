@@ -13,9 +13,9 @@ export default function LoginScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Session login: Check if already logged in
+    // Session login: check if a JWT-like token exists
     AsyncStorage.getItem('userToken').then(token => {
-      if (token) {
+      if (token && token.split('.').length === 3) {
         navigation.replace('Home');
       }
     });
@@ -29,12 +29,13 @@ export default function LoginScreen({ navigation }) {
     setLoading(true);
     try {
       const res = await login(email, password);
-      // Store session (token) from backend if available
-      if (res.data.token) {
-        await AsyncStorage.setItem('userToken', res.data.token);
-      } else {
-        await AsyncStorage.setItem('userToken', 'loggedin');
+      // Backend must return a JWT token for protected routes
+      if (!res.data.token || res.data.token.split('.').length !== 3) {
+        throw new Error('Invalid login session token from server.');
       }
+      await AsyncStorage.setItem('userToken', res.data.token);
+      await AsyncStorage.setItem('userEmail', email);
+      await AsyncStorage.setItem('lastActiveTime', Date.now().toString());
       Alert.alert('Success', res.data.message);
       navigation.replace('Home');
     } catch (err) {

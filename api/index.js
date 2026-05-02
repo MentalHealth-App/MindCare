@@ -1,6 +1,77 @@
 // api/index.js
 require('dotenv').config();
+const dns = require('dns');
 const mongoose = require('mongoose');
+
+// DNS fallback — keep in sync with server.js (Cloudflare → Google → both)
+const _cfDns = ['1.1.1.1', '1.0.0.1'];
+const _googleDns = ['8.8.8.8', '8.8.4.4'];
+function _applyMongoDns(servers) {
+  dns.setServers(servers);
+  if (typeof dns.setDefaultResultOrder === 'function') {
+    dns.setDefaultResultOrder('ipv4first');
+  }
+}
+function _isSrvDnsFailure(err) {
+  if (!err) return false;
+  if (err.code === 'ECONNREFUSED' && err.syscall === 'querySrv') return true;
+  const msg = String(err.message || '');
+  return msg.includes('querySrv') || msg.includes('_mongodb._tcp');
+}
+async function connectMongooseWithDnsFallback(mongooseInstance, uri, options = {}) {
+  const raw = (process.env.MONGODB_DNS_SERVERS || '').trim();
+  const mode = raw.toLowerCase();
+  if (mode === 'system' || mode === 'off') {
+    await mongooseInstance.connect(uri, options);
+    console.log('MongoDB connected');
+    return;
+  }
+  if (raw) {
+    const custom = raw.split(',').map((s) => s.trim()).filter(Boolean);
+    if (custom.length) {
+      _applyMongoDns(custom);
+      await mongooseInstance.connect(uri, options);
+      console.log('MongoDB connected (custom DNS:', custom.join(', '), ')');
+      return;
+    }
+  }
+  const strategies = [
+    { label: 'Cloudflare 1.1.1.1', servers: _cfDns },
+    { label: 'Google 8.8.8.8', servers: _googleDns },
+    { label: 'Cloudflare + Google', servers: [..._cfDns, ..._googleDns] },
+  ];
+  let lastErr;
+  for (const { label, servers } of strategies) {
+    try {
+      _applyMongoDns(servers);
+      console.log('MongoDB DNS: trying', label, '→', servers.join(', '));
+      await mongooseInstance.connect(uri, options);
+      console.log('MongoDB connected ✓ (' + label + ')');
+      return;
+    } catch (err) {
+      lastErr = err;
+      if (_isSrvDnsFailure(err)) {
+        console.warn('MongoDB DNS: retry — failed (' + label + '):', err.message || err);
+        try {
+          if (mongooseInstance.connection.readyState !== 0) {
+            await mongooseInstance.disconnect();
+          }
+        } catch (_) {
+          /* ignore */
+        }
+        continue;
+      }
+      throw err;
+    }
+  }
+  console.error('MongoDB connection error:', lastErr?.message || lastErr);
+  if (lastErr && _isSrvDnsFailure(lastErr)) {
+    console.error(
+      'All DNS strategies failed for mongodb+srv. Set MONGODB_URI_STANDARD to Atlas “standard” mongodb:// string, or fix system DNS.'
+    );
+  }
+  throw lastErr;
+}
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
 const express = require('express');
@@ -9,14 +80,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const uri = process.env.MONGODB_URI;
+const uri = process.env.MONGODB_URI_STANDARD || process.env.MONGODB_URI;
 
 let isConnected = false;
 async function connectDB() {
   if (isConnected) return;
-  await mongoose.connect(uri);
+  if (!uri) throw new Error('Set MONGODB_URI or MONGODB_URI_STANDARD in .env');
+  await connectMongooseWithDnsFallback(mongoose, uri, {
+    serverSelectionTimeoutMS: 15000,
+    family: 4,
+  });
   isConnected = true;
-  console.log('MongoDB connected');
 }
 
 // MongoDB models
